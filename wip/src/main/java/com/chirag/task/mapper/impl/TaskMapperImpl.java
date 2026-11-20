@@ -1,8 +1,10 @@
 package com.chirag.task.mapper.impl;
 
 import com.chirag.task.domain.CreateTaskRequest;
+import com.chirag.task.domain.UpdateTaskRequest;
 import com.chirag.task.domain.dto.CreateTaskRequestDto;
 import com.chirag.task.domain.dto.TaskDto;
+import com.chirag.task.domain.dto.UpdateTaskRequestDto;
 import com.chirag.task.domain.entity.Task;
 import com.chirag.task.mapper.TaskMapper;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,17 @@ public class TaskMapperImpl implements TaskMapper {
                 dto.title(),
                 dto.description(),
                 dto.dueDate(),
+                dto.priority()
+        );
+    }
+
+    @Override
+    public UpdateTaskRequest fromDto(UpdateTaskRequestDto dto) {
+        return new UpdateTaskRequest(
+                dto.title(),
+                dto.description(),
+                dto.dueDate(),
+                dto.status(),
                 dto.priority()
         );
     }

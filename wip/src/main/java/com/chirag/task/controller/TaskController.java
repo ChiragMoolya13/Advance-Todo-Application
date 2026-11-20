@@ -1,20 +1,20 @@
 package com.chirag.task.controller;
 
 import com.chirag.task.domain.CreateTaskRequest;
+import com.chirag.task.domain.UpdateTaskRequest;
 import com.chirag.task.domain.dto.CreateTaskRequestDto;
 import com.chirag.task.domain.dto.TaskDto;
+import com.chirag.task.domain.dto.UpdateTaskRequestDto;
 import com.chirag.task.domain.entity.Task;
 import com.chirag.task.mapper.TaskMapper;
 import com.chirag.task.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/api/v1/tasks")
@@ -38,10 +38,21 @@ public class TaskController {
        return new ResponseEntity<>(createTaskDto, HttpStatus.CREATED);
     }
 
+    @GetMapping
     public ResponseEntity<List<TaskDto>> listTasks(){
         List<Task> tasks = taskService.listTasks();
         List<TaskDto> taskDtos = tasks.stream().map(taskMapper::toDto).toList();
         return ResponseEntity.ok(taskDtos);
+    }
+
+    @PutMapping(path = "/{taskId}")
+    public ResponseEntity<TaskDto> updateTask(@PathVariable UUID taskId,
+          @Valid @RequestBody UpdateTaskRequestDto updateTaskRequestDto
+    ){
+       UpdateTaskRequest updateTaskRequest = taskMapper.fromDto(updateTaskRequestDto);
+       Task task = taskService.updateTask(taskId,updateTaskRequest);
+       TaskDto taskDto = taskMapper.toDto(task);
+       return ResponseEntity.ok(taskDto);
 
     }
 }
